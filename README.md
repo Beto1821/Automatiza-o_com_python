@@ -1,4 +1,5 @@
 # Geração de relatório com imagens de teste VSWR de propagação em cabos de RF(FEEDER) projeto Hospital ALbert Einsten Claro/VIVO
+Exemplo de automatização usando Python
 
 # Crie o ambiente virtual para o projeto
 python3 -m venv .venv && source .venv/bin/activate
