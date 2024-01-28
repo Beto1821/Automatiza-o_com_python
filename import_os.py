@@ -4,7 +4,6 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as ExcelImage
 
-
 # Função para extrair dados da imagem
 def extract_image_data(image_path):
     img = Image.open(image_path)
@@ -12,15 +11,14 @@ def extract_image_data(image_path):
     return {'Image Name': os.path.basename(image_path),
             'Width': width, 'Height': height}
 
-
 # Pasta contendo as imagens
 image_folder = '/Users/adalbertoramosribeiro/Desktop/jog'
 
 # Arquivo Excel
 excel_file = 'image_data_large_spacing.xlsx'
 
-# Obter uma lista de arquivos de imagem na pasta
-image_files = [f for f in os.listdir(image_folder) if f.endswith('.jpg')]
+# Obter uma lista ordenada de arquivos de imagem na pasta
+image_files = sorted([f for f in os.listdir(image_folder) if f.endswith('.jpg')])
 
 # Inicializar um DataFrame vazio
 data = pd.DataFrame(columns=['Image Name', 'Width', 'Height'])
