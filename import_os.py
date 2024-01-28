@@ -4,12 +4,14 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as ExcelImage
 
+
 # Função para extrair dados da imagem
 def extract_image_data(image_path):
     img = Image.open(image_path)
     width, height = 9.33 * 9, 7.0 * 9  # Aumenta o tamanho em 900%
     return {'Image Name': os.path.basename(image_path),
             'Width': width, 'Height': height}
+
 
 # Pasta contendo as imagens
 image_folder = '/Users/adalbertoramosribeiro/Desktop/jog'
