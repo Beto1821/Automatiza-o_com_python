@@ -4,7 +4,6 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as ExcelImage
 
-
 # Função para extrair dados da imagem
 def extract_image_data(image_path):
     img = Image.open(image_path)
@@ -12,15 +11,21 @@ def extract_image_data(image_path):
     return {'Image Name': os.path.basename(image_path),
             'Width': width, 'Height': height}
 
+# Pasta contendo as imagens normais
+normal_folder = '/Users/adalbertoramosribeiro/Desktop/jog/normal'
 
-# Pasta contendo as imagens
-image_folder = '/Users/adalbertoramosribeiro/Desktop/jog'
+# Pasta contendo as imagens decimais
+decimal_folder = '/Users/adalbertoramosribeiro/Desktop/jog/decimal'
 
 # Arquivo Excel
 excel_file = 'image_data_large_spacing.xlsx'
 
-# Obter uma lista ordenada de arquivos de imagem na pasta
-image_files = sorted([f for f in os.listdir(image_folder) if f.endswith('.jpg')])
+# Obter uma lista ordenada de arquivos de imagem nas pastas
+normal_image_files = sorted([f for f in os.listdir(normal_folder) if f.endswith('.jpg')],
+                            key=lambda x: (int(x.split(" ")[-1]) if x.split(" ")[-1].isdigit() else float('inf'), x))
+
+decimal_image_files = sorted([f for f in os.listdir(decimal_folder) if f.endswith('.jpg')],
+                              key=lambda x: (int(x.split(" ")[-1]) if x.split(" ")[-1].isdigit() else float('inf'), x))
 
 # Inicializar um DataFrame vazio
 data = pd.DataFrame(columns=['Image Name', 'Width', 'Height'])
@@ -35,9 +40,32 @@ spacing = 1  # 1 linha
 # Iniciar a partir da segunda linha após o cabeçalho
 row_number = 2
 
-# Loop através de cada arquivo de imagem e extrair dados
-for image_file in image_files:
-    image_path = os.path.join(image_folder, image_file)
+# Loop através de cada arquivo de imagem normal e extrair dados
+for image_file in normal_image_files:
+    image_path = os.path.join(normal_folder, image_file)
+    image_data = extract_image_data(image_path)
+
+    # Adicionar dados ao DataFrame
+    data = pd.concat([data, pd.DataFrame([image_data])], ignore_index=True)
+
+    # Adicionar a imagem à planilha com espaçamento
+    img = ExcelImage(image_path)
+    img.width = 90 * 9  # Ajuste conforme necessário
+    img.height = 70 * 9  # Ajuste conforme necessário
+
+    # Calcular a próxima célula na coluna B
+    next_cell = f'B{row_number}'
+
+    # Adicionar a imagem na célula
+    ws.add_image(img, next_cell)
+
+    # Atualizar a próxima linha para 32
+    # (31 linhas da imagem + 1 linha de espaço)
+    row_number += 32
+
+# Loop através de cada arquivo de imagem decimal e extrair dados
+for image_file in decimal_image_files:
+    image_path = os.path.join(decimal_folder, image_file)
     image_data = extract_image_data(image_path)
 
     # Adicionar dados ao DataFrame
